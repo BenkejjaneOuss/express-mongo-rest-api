@@ -1,13 +1,63 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
-//Get Login
-router.get('/login', (req, res, next) => {
-    res.send("I am login")
+//Login
+router.post('/login', (req, res) => {
+
+    const email = req.body.email
+    const password = req.body.password
+
+    const query = { email }
+
+    User.findOne(query, (err, user) => {
+        if(err) {
+            return res.send({
+                success : false,
+                message : 'Error, please try again'
+            })
+        }
+
+        if(!user) {
+            return res.send({
+                success : false,
+                message : 'Error, account not found'
+            })
+        }
+
+        user.isPasswordMatch(password, user.password, (err, isMatch) => {
+            if(err) {
+                return res.send({
+                    success : false,
+                    message : 'Error, please try again'
+                })
+            }
+
+            if(!isMatch) {
+                return res.send({
+                    success: false,
+                    message: 'Error, invalid password'
+                })
+            }
+            
+            //Return all infos without password
+            let returnUser = {
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
+
+            return res.send({
+                success : true, 
+                message: 'You can login now',
+                user // user == user: user OR user: returnUser
+            })
+
+        })
+    })
 })
 
 //New Registration
-router.post('/register', (req, res, next) => {
+router.post('/register', (req, res) => {
     let newUser = new User({
         name: req.body.name,
         email: req.body.email,
@@ -18,7 +68,7 @@ router.post('/register', (req, res, next) => {
         if(err) {
             return res.send({
                 success: false,
-                message: 'Failed to save the user'
+                message: 'Error, failed to save the user'
             })
         }
         res.send({
