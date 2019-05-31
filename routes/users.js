@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
+
+const jwt = require('jsonwebtoken')
+
 const User = require('../models/user')
+
 //Login
 router.post('/login', (req, res) => {
 
@@ -25,6 +29,11 @@ router.post('/login', (req, res) => {
         }
 
         user.isPasswordMatch(password, user.password, (err, isMatch) => {
+
+            //Generating the token
+            const ONE_WEEk = 608400 //Second
+            const token = jwt.sign({ user }, process.env.Key, { expiresIn: ONE_WEEk })
+
             if(err) {
                 return res.send({
                     success : false,
@@ -32,6 +41,7 @@ router.post('/login', (req, res) => {
                 })
             }
 
+            //Invalid Password
             if(!isMatch) {
                 return res.send({
                     success: false,
@@ -43,13 +53,14 @@ router.post('/login', (req, res) => {
             let returnUser = {
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                token
             }
 
             return res.send({
                 success : true, 
                 message: 'You can login now',
-                user // user == user: user OR user: returnUser
+                user: returnUser // Or user: user (return with password)
             })
 
         })

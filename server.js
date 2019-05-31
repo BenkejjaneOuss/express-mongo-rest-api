@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express =  require('express')
 const mongoose = require('mongoose')
+
 const bodyParser = require('body-parser')
+const passport = require('passport')
 
 const userRoutes = require('./routes/users')
+const taskRoutes = require('./routes/tasks')
 
 //Initialize app with express
 const app = express();
@@ -17,18 +20,34 @@ mongoose.connection.on('error', (err) => {
     console.log('Unable to connect to the database ' + err)
 })
 
-//Initialize the port from .env file
-const port = process.env.port
 
-//Middelwares
+// -------- Middelwares ------- //
+
+//bodyParser Middelware
 app.use(bodyParser.json())
 
+//Passport Middelware
+app.use(passport.initialize())
+app.use(passport.session())
+require('./config/passport')(passport)
+
+// -------- Middelwares ------- //
+
+//Index router
 app.get('/', (req, res, next) => {
     res.send("My Page")
 })
 
+//User Routes
 app.use('/user', userRoutes)
 
+//Task Routes
+app.use('/task', taskRoutes)
+
+
+
+//Initialize the port from .env file
+const port = process.env.PORT
 
 //Start the server
 app.listen(port, () => {
