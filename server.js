@@ -12,7 +12,7 @@ const taskRoutes = require('./routes/tasks')
 const app = express();
 
 //Database connection with mongo
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
 mongoose.connection.on('connected', () => {
     console.log('Connected to the database')
 })
@@ -35,7 +35,7 @@ require('./config/passport')(passport)
 
 //Index router
 app.get('/', (req, res, next) => {
-    res.send("My Page")
+    res.send("Home Page")
 })
 
 //User Routes
