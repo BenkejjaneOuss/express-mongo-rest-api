@@ -32,7 +32,7 @@ router.post('/login', (req, res) => {
 
             //Generating the token
             const ONE_WEEk = 608400 //Second
-            const token = jwt.sign({ user }, process.env.Key, { expiresIn: ONE_WEEk })
+            const token = jwt.sign({ user }, process.env.KEY, { expiresIn: ONE_WEEk })
 
             if(err) {
                 return res.send({
