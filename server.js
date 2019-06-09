@@ -8,6 +8,8 @@ const passport = require('passport')
 const userRoutes = require('./routes/users')
 const taskRoutes = require('./routes/tasks')
 
+const cors = require('cors')
+
 //Initialize app with express
 const app = express();
 
@@ -25,6 +27,9 @@ mongoose.connection.on('error', (err) => {
 
 //bodyParser Middelware
 app.use(bodyParser.json())
+
+//Cors Middelware
+app.use(cors())
 
 //Passport Middelware
 app.use(passport.initialize())
