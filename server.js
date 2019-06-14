@@ -14,7 +14,7 @@ const cors = require('cors')
 const app = express();
 
 //Database connection with mongo
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useCreateIndex: true })
 mongoose.connection.on('connected', () => {
     console.log('Connected to the database')
 })
