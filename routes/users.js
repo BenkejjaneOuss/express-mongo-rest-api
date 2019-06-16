@@ -54,7 +54,7 @@ router.post('/login', (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                token
+                token: "Bearer " + token
             }
 
             return res.send({

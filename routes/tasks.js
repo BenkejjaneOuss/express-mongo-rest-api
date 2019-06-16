@@ -9,7 +9,7 @@ router.post("/add", passport.authenticate('jwt', { session: false }), (req, res)
     const task = new Task({
         name: req.body.name,
         done: req.body.done,
-        owner: req.body.owner,
+        owner: req.user._id,
     })
 
     task.save((err, task) => {
